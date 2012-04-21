@@ -10,6 +10,7 @@ import json
 app = Flask(__name__)
 #app.debug = True
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
 
 class Color(db.Model):
@@ -31,7 +32,7 @@ class Color(db.Model):
 def hello():
     callback = request.args.get('jsonp_callback', '')
     tail = request.args.get('tail')
-    colors = Color.query.limit(int(tail)).order_by(desc(Color.timestamp)).all()
+    colors = Color.query.order_by(desc(Color.timestamp)).limit(int(tail))
     data = json.dumps([i.serialize for i in colors])
     return "%s(%s);"%(callback,data)
 
