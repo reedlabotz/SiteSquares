@@ -6,7 +6,7 @@
 			var MinWidth = 4;
 			var MinHeight = 2;
 			var MaxMultiplier = 20;
-			var multiplier = 1;
+			var multiplier = 3;
 			
 			$(document).ready(function(){
 				var t=setInterval("grabData();",5000);
@@ -21,7 +21,11 @@
 				});
 
 				for(i=1;i<MaxMultiplier;i++){
-					$("#number-select").append("<option value='"+i+"'>" + (MinWidth*MinHeight*i*i) + "</option>");
+					var extra = "";
+					if(i == multiplier){
+						extra = " selected='selected'";
+					}
+					$("#number-select").append("<option value='"+i+"'" + extra + ">" + (MinWidth*MinHeight*i*i) + "</option>");
 				}
 			});
 
