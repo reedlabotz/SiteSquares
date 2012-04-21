@@ -3,12 +3,11 @@
   "version": "0.1",
   "manifest_version": 1,
   "description": "Colors of websites.",
-  "background": {
-     "scripts":["colors.js"]
-  },
+  "background_page": "background.html",
   "permissions": [
     "http://*",
-    "https://*"
+    "https://*",
+	"tabs"
   ]
 }
 
