@@ -4,6 +4,10 @@ var tabcolors = {};
 
 
 function tryIcon(faviconUrl, url, shouldsend) {
+	if (!faviconUrl) {
+		console.log("could not find favicon for "+url);
+		return;
+	}
 	function onImageLoaded() {
 		//console.log("image loaded");
 		colors = findColorOfIcon(img);
@@ -29,29 +33,46 @@ function findColorOfIcon(image) {
 		var a = pix[i+3];
 		// i+3 is alpha (the fourth element)
 		var amount = 10.0;
-		r = Math.floor(r/amount)*amount;
-		g = Math.floor(g/amount)*amount;
-		b = Math.floor(b/amount)*amount;
-		a = Math.floor(a/amount)*amount;
-		if (isValidColor(r,g,b,a)) {
-			var str = r.toString(16)+""+g.toString(16)+""+b.toString(16);
-			//console.log("Str: "+str);
-			if (colors[str]) {
-				colors[str] = colors[str] + 1;
-			} else {
-				colors[str] = 1;
-			}
+		//r = Math.floor(r/amount)*amount;
+		//g = Math.floor(g/amount)*amount;
+		//b = Math.floor(b/amount)*amount;
+		//a = Math.floor(a/amount)*amount;
+		var weight = getWeight(r,g,b,a)
+		var str = toHex(r,g,b);
+		//console.log("Str: "+str);
+		if (colors[str]) {
+			colors[str] = colors[str] + weight;
+		} else {
+			colors[str] = weight;
 		}
+	
 	}
 	//console.log("color of icon: "+colors);
 	return colors;
 }
-function isValidColor(r,g,b,a) {
-	if (a < 20) return false;
-	if (r < 20 && g < 20 && b < 20) return false;
-	if (r > 240 && g > 240 && b > 240) return false;
+function getWeight(r,g,b,a) {
+	var opacity = a/255.0;
+	var hsv = rgbToHsv(r,g,b);
+	var h = hsv[0]; var s = hsv[1]; var v = hsv[2];
 
-	return true;
+	var value = v * s;
+	value = value * value;
+
+	return value * opacity; //scale down - if transparent - don't weight
+}
+
+function toHex(r,g,b) {
+   var str="";
+   if (r < 16)
+	   str=str+"0";
+	str = str + r.toString(16);
+   if (g < 16)
+	   str=str+"0";
+	str = str + g.toString(16);
+   if (b < 16)
+	   str=str+"0";
+	str = str + b.toString(16);
+	return str;
 }
 
 
@@ -73,7 +94,7 @@ function findColorOfTab() {
 					else 
 						tryIcon(tab2.favIconUrl, tab2.url, true);
 				} else {
-					console.log("Not teh same tab!");
+					console.log("Not teh same tab! "+tab1.url+"  and "+tab2.url);
 				}
 			});
 		},5000); //make sure they'r eon the page for a while longer
@@ -118,13 +139,17 @@ function sendColor(color) {
 	});
 }
 
+var lastUrl;
 function setColor(url, colors, send) {
 	//console.log("Lots of colors! "+url);
 	var color = getMaxColor(colors);
 	tabcolors[url] = color;
 	//console.log("color here: "+color);
-	if (send)
-		sendColor(color);
+	if (send) {
+		if (lastUrl != url)
+			sendColor(color);
+		lastUrl = url;
+	}
 }
 //recieve the colors from the pages
 chrome.extension.onRequest.addListener( function(request, sender, sendResponse) {
