@@ -4,9 +4,15 @@
   "manifest_version": 1,
   "description": "Colors of websites.",
   "background_page": "background.html",
+  "content_scripts": [
+    {
+      "matches": ["http://*/*","https://*/*"],
+      "js": ["content.js"]
+    }
+  ],
   "permissions": [
-    "http://*",
-    "https://*",
+    "http://*/*",
+    "https://*/*",
 	"tabs"
   ]
 }
