@@ -29,7 +29,7 @@ class Color(db.Model):
 
 @app.route('/')
 def main():
-    return redirect('http://www.acm.uiuc.edu/sigmusic/sitesquares', code=302)
+    return redirect('http://reedlabotz.github.com/SiteSquares/', code=302)
 
 
 @app.route('/colors')
