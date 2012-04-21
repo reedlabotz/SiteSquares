@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from flask import Flask
+from flask import request
 from flask.ext.sqlalchemy import SQLAlchemy
 import json
 
@@ -27,8 +28,10 @@ class Color(db.Model):
 
 @app.route('/')
 def hello():
+    callback = request.args.get('jsonp_callback', '')
     colors = Color.query.all()
-    return json.dumps([i.serialize for i in colors])
+    data = json.dumps([i.serialize for i in colors])
+    return "%s(%s);"%(callback,data)
 
 @app.route('/color/<color>')
 def color(color):
