@@ -3,9 +3,26 @@
 	<head>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script>
+			var MinWidth = 4;
+			var MinHeight = 2;
+			var MaxMultiplier = 20;
+			var multiplier = 1;
+			
 			$(document).ready(function(){
-				grabData();
 				var t=setInterval("grabData();",5000);
+				recalcSizes();
+				$(window).bind("resize", function() {
+					recalcSizes();
+				});
+				
+				$("#number-select").change(function(){
+					multiplier = $("#number-select option:selected").val();
+					recalcSizes();
+				});
+
+				for(i=1;i<MaxMultiplier;i++){
+					$("#number-select").append("<option value='"+i+"'>" + (MinWidth*MinHeight*i*i) + "</option>");
+				}
 			});
 
 			function grabData(){
@@ -13,7 +30,7 @@
 				$.ajax({
 					dataType: 'jsonp',
 					jsonp: 'jsonp_callback',
-					url: "http://sitesquares.herokuapp.com/colors?tail=84",
+					url: "http://sitesquares.herokuapp.com/colors?tail=" + (MinWidth*MinHeight*multiplier*multiplier),
 					success: function (data) {
 						$("#main").html("");
 						for(i=0;i<data.length;i++){
@@ -21,25 +38,16 @@
 						}
 				  	},
 				});
-
-				$(window).bind("resize", function() {
-					recalcSizes();
-				});
-				recalcSizes();
 			}
 
 			function recalcSizes() {
+				grabData();
 				$("#main-container").css("line-height", $(window).height()+"px");
-				return;//doop
-				var width = Math.sqrt(($(window).width()*$(window).height())/$(".box").length) ;
-				var numheight = $(window).height()/width;
-				if (numheight * width > $(window).height()) {
-					width = $(window).width()/(numheight-1);
-				}
-
-				width = width - 2;
+				width = 960/(MinWidth*multiplier) - 1;
 				document.styleSheets[0].addRule(".box", "width: "+width+"px;");
 				document.styleSheets[0].addRule(".box", "height: "+width+"px;");
+
+				return;//doop
 			}
 
 		</script>
@@ -60,6 +68,8 @@
 				margin: 0;
 				padding: 0;
 				background-color: #ccc;
+				font-size:12px;
+				font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
 			}
 			.box {
 				width: 79px;
@@ -80,11 +90,15 @@
 				margin-right: auto;
 				background-color: #fff;
 				width: 961px;
-				height: 561px;
+				height: 481px;
 			}
 		</style>
 	</head>
 	<body>
+		<div id="number-choose">
+			Number: <select id="number-select">
+			</select>
+		</div>
 		<div id="main-container">
 			<div id="main">
 			</div>
