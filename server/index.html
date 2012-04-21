@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script>
+			$(document).ready(function(){
+				$.ajax({
+					dataType: 'jsonp',
+					jsonp: 'jsonp_callback',
+					url: "http://sitesquares.herokuapp.com/",
+					success: function (data) {
+						console.log(data);
+						for(i=0;i<data.length;i++){
+							$("#main").append("<div style='width:50px;height:50px;background:#" + data[i]['color'] + ";float:left;'>");
+						}
+				  	},
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="main">
+		</div>
+	</body>
+</html>
