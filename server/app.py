@@ -3,12 +3,14 @@ from datetime import datetime
 from flask import Flask
 from flask import request
 from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 import json
 
 
 app = Flask(__name__)
 #app.debug = True
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
 
 class Color(db.Model):
@@ -26,11 +28,11 @@ class Color(db.Model):
     def serialize(self):
         return {'id':self.id,'color':self.color,'timestamp':self.timestamp.strftime('%Y-%m-%dT%H:%M:%S')}
 
-@app.route('/')
+@app.route('/colors')
 def hello():
     callback = request.args.get('jsonp_callback', '')
     tail = request.args.get('tail')
-    colors = Color.query.limit(int(tail)).orderby_by(-Color.timestamp).all()
+    colors = Color.query.order_by(desc(Color.timestamp)).limit(int(tail))
     data = json.dumps([i.serialize for i in colors])
     return "%s(%s);"%(callback,data)
 
