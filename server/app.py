@@ -28,8 +28,13 @@ class Color(db.Model):
     def serialize(self):
         return {'id':self.id,'color':self.color,'timestamp':self.timestamp.strftime('%Y-%m-%dT%H:%M:%S')}
 
+@app.route('/')
+def main():
+    flask.redirect('http://www.acm.uiuc.edu/sigmusic/sitesquares', code=302)
+
+
 @app.route('/colors')
-def hello():
+def colors():
     callback = request.args.get('jsonp_callback', '')
     tail = request.args.get('tail')
     colors = Color.query.order_by(desc(Color.timestamp)).limit(int(tail))
