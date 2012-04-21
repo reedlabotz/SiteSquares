@@ -29,7 +29,8 @@ class Color(db.Model):
 @app.route('/')
 def hello():
     callback = request.args.get('jsonp_callback', '')
-    colors = Color.query.all()
+    tail = request.args.get('tail')
+    colors = Color.query.limit(int(tail))..orderby_by(-Color.timestamp).all()
     data = json.dumps([i.serialize for i in colors])
     return "%s(%s);"%(callback,data)
 
