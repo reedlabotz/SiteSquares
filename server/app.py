@@ -25,10 +25,13 @@ def hello():
 
 @app.route('/color/<color>')
 def color(color):
-    c = Color(color)
-    db.session.add(c)
-    db.session.commit()
-    return "thanks: %s"%c
+    try:
+        c = Color(color)
+        db.session.add(c)
+        db.session.commit()
+    except Exception as inst:
+        print inst
+    return "thanks"
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
