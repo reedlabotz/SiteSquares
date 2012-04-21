@@ -6,14 +6,15 @@
   "background_page": "background.html",
   "content_scripts": [
     {
-      "matches": ["http://*/*","https://*/*"],
+      "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
   ],
   "permissions": [
     "http://*/*",
     "https://*/*",
-	"tabs"
+	"tabs",
+	"chrome://favicon/"
   ]
 }
 
