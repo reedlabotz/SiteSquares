@@ -128,17 +128,19 @@ function setColor(url, colors, send) {
 }
 //recieve the colors from the pages
 chrome.extension.onRequest.addListener( function(request, sender, sendResponse) {
-	tryIcon(request.favicon, request.url, true);
+	if (request.action == "onload") {
+		findColorOfTab();
+	}
 });
 
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 	//console.log("Tab: "+tab+" tabId: "+tabId);
-	findColorOfTab(tab);
+	findColorOfTab();
 });
 chrome.tabs.onCreated.addListener(function(tab) {
 	//console.log("Tab: "+tab);
-	findColorOfTab(tab);
+	findColorOfTab();
 });
 //chrome.tabs.OnRemoved.addListener(function(tab) {
 //	console.log("Tab: "+tab);
