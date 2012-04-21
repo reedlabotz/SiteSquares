@@ -2,6 +2,8 @@ import os
 from datetime import datetime
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+import json
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
@@ -21,7 +23,8 @@ class Color(db.Model):
 
 @app.route('/')
 def hello():
-    return 'Hello World!'
+    colors = Color.query.all()
+    return json.dumps(colors)
 
 @app.route('/color/<color>')
 def color(color):
