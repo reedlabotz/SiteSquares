@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import Flask
 from flask import request
 from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 import json
 
 
@@ -26,11 +27,11 @@ class Color(db.Model):
     def serialize(self):
         return {'id':self.id,'color':self.color,'timestamp':self.timestamp.strftime('%Y-%m-%dT%H:%M:%S')}
 
-@app.route('/')
+@app.route('/colors')
 def hello():
     callback = request.args.get('jsonp_callback', '')
     tail = request.args.get('tail')
-    colors = Color.query.limit(int(tail)).orderby_by(-Color.timestamp).all()
+    colors = Color.query.limit(int(tail)).order_by(desc(Color.timestamp)).all()
     data = json.dumps([i.serialize for i in colors])
     return "%s(%s);"%(callback,data)
 
