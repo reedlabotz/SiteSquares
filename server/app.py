@@ -25,7 +25,7 @@ class Color(db.Model):
 def hello():
     colors = Color.query.all()
     print colors
-    return json.dumps(colors)
+    return "hi"
 
 @app.route('/color/<color>')
 def color(color):
