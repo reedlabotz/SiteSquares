@@ -1,16 +1,15 @@
 import os
 from datetime import datetime
-from flask import Flask
-from flask import request
+from flask import Flask, request, redirect
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 import json
 
 
 app = Flask(__name__)
-#app.debug = True
+app.debug = True
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
 
 class Color(db.Model):
@@ -30,15 +29,18 @@ class Color(db.Model):
 
 @app.route('/')
 def main():
-    flask.redirect('http://www.acm.uiuc.edu/sigmusic/sitesquares', code=302)
+    return redirect('http://www.acm.uiuc.edu/sigmusic/sitesquares', code=302)
 
 
 @app.route('/colors')
 def colors():
-    callback = request.args.get('jsonp_callback', '')
-    tail = request.args.get('tail')
-    colors = Color.query.order_by(desc(Color.timestamp)).limit(int(tail))
-    data = json.dumps([i.serialize for i in colors])
+    try:
+        callback = request.args.get('jsonp_callback', '')
+        tail = request.args.get('tail')
+        colors = Color.query.order_by(desc(Color.timestamp)).limit(int(tail))
+        data = json.dumps([i.serialize for i in colors])
+    except:
+        return "error"
     return "%s(%s);"%(callback,data)
 
 @app.route('/color/<color>')
