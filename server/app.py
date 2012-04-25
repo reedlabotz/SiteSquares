@@ -48,7 +48,7 @@ def colors_day():
     try:
         callback = request.args.get('jsonp_callback','')
         delta = timedelta(days=1)
-        colors = Color.query.filter("timestmap>=:time").params(time=(datetime.now()-delta)).order_by(desc(Color.timestamp))
+        colors = Color.query.filter("timestamp>=:time").params(time=(datetime.now()-delta)).order_by(desc(Color.timestamp))
         data = json.dumps([i.serialize for i in colors])
     except Exception as inst:
         return "error: %s" % inst
