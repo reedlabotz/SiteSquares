@@ -50,8 +50,8 @@ def colors_day():
         delta = timedelta(days=1)
         colors = Color.query.filter("timestamp>=:time").params(time=(datetime.now()-delta)).order_by(desc(Color.timestamp))
         data = json.dumps([i.serialize for i in colors])
-    except Exception as inst:
-        return "error: %s" % inst
+    except:
+        return "error"
     return "%s(%s);"%(callback,data)
 
 @app.route('/color/<color>')
