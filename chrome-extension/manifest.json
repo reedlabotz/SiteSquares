@@ -10,6 +10,11 @@
       "js": ["content.js"]
     }
   ],
+  "browser_action": {
+    "default_title": "SiteSquares"      // optional; shown in tooltip
+    //"default_popup": "popup.html"        // optional
+
+  },
   "permissions": [
     "http://*/*",
     "https://*/*",

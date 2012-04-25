@@ -41,9 +41,15 @@ function findColorOfIcon(image) {
 		var str = toHex(r,g,b);
 		//console.log("Str: "+str);
 		if (colors[str]) {
-			colors[str] = colors[str] + weight;
+		   colors[str] =  {
+			  count:colors[str] + weight,
+			  data:colors[str].data
+		   };
 		} else {
-			colors[str] = weight;
+		   colors[str] =  {
+			  count:1,
+			  data:{string:str, array:[r,g,b,a]}
+		   };
 		}
 	
 	}
@@ -120,9 +126,9 @@ function getMaxColor(colors) {
 	for (key in colors) {
 		var element = colors[key];
 		//console.log("Color: "+key+" times: "+element);
-		if (element > max) {
-			max = element;
-			argmax = key;
+		if (element.count > max) {
+			max = element.count;
+			argmax = element.data;
 		}
 	}
 
@@ -132,11 +138,39 @@ function getMaxColor(colors) {
 
 
 function sendColor(color) {
-	var url = "http://sitesquares.herokuapp.com/color/"+color;
+	var url = "http://sitesquares.herokuapp.com/color/"+color.string;
 	console.log("Sending to url: "+url);
+	console.log("color array: "+color.array[0]+","+color.array[1]+","+color.array[2]+","+color.array[3]);
 	$.get(url, function() {
 		console.log("Success");
 	});
+	setBrowserIcon(color);
+}
+
+function setBrowserIcon(color) {
+	var canvas = document.createElement("canvas");
+	var c = canvas.getContext("2d");
+	canvas.width = 19;
+	canvas.height = 19;
+    var r = color.array[0];
+    var g = color.array[1];
+    var b = color.array[2];
+    var a = color.array[3];
+	var pix = c.createImageData(canvas.width, canvas.height);
+	for (var i = 0, n = canvas.width*canvas.height*4; i < n; i += 4) {
+		pix.data[i  ] = r; // red
+		pix.data[i+1] = g; // green
+		pix.data[i+2] = b; // blue
+		pix.data[i+3] = a;
+	}
+	chrome.browserAction.setIcon({imageData:pix});
+}
+function setPixel(imageData, x, y, r, g, b, a) {
+    index = (x + y * imageData.width) * 4;
+    imageData.data[index+0] = r;
+    imageData.data[index+1] = g;
+    imageData.data[index+2] = b;
+    imageData.data[index+3] = a;
 }
 
 var lastUrl;
