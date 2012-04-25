@@ -39,15 +39,16 @@ function findColorOfIcon(image) {
 		//a = Math.floor(a/amount)*amount;
 		var weight = getWeight(r,g,b,a)
 		var str = toHex(r,g,b);
+		var hsv = rgbToHsv(r,g,b);
+		var key = hsv[0]/3; //
+		key = str;
 		//console.log("Str: "+str);
-		if (colors[str]) {
-		   colors[str] =  {
-			  count:colors[str] + weight,
-			  data:colors[str].data
-		   };
+		if (colors[key]) {
+		   colors[key].count = colors[key].count + weight;
+		   //colors[key].data.push({string:str, array:[r,g,b,a]});
 		} else {
-		   colors[str] =  {
-			  count:1,
+		   colors[key] =  {
+			  count:weight,
 			  data:{string:str, array:[r,g,b,a]}
 		   };
 		}
@@ -132,6 +133,12 @@ function getMaxColor(colors) {
 		}
 	}
 
+	//found the most common color, now let's find the brightest component in it.
+	max = 0;
+	var brightest;
+	for (color in argmax) {
+	///        if (
+	}
 	//console.log(" Best color:" +argmax + " with "+max+" many");
 	return argmax;
 }
