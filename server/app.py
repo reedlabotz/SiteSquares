@@ -7,7 +7,7 @@ import json
 
 
 app = Flask(__name__)
-app.debug = True
+#app.debug = True
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
@@ -50,8 +50,8 @@ def colors_day():
         delta = timedelta(days=1)
         colors = Color.query.filter("timestmap>=:time").params(time=(datetime.now()-delta)).order_by(desc(Color.timestamp))
         data = json.dumps([i.serialize for i in colors])
-    except:
-        return "error"
+    except Exception as inst:
+        return "error: %s" % inst
     return "%s(%s);"%(callback,data)
 
 @app.route('/color/<color>')
