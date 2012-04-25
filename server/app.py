@@ -7,7 +7,7 @@ import json
 
 
 app = Flask(__name__)
-#app.debug = True
+app.debug = True
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
