@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime,timedelta
 from flask import Flask, request, redirect
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
@@ -39,6 +39,16 @@ def colors():
         tail = request.args.get('tail')
         colors = Color.query.order_by(desc(Color.timestamp)).limit(int(tail))
         data = json.dumps([i.serialize for i in colors])
+    except:
+        return "error"
+    return "%s(%s);"%(callback,data)
+
+@app.route('/colors/day')
+def colors_day():
+    try:
+        callback = request.args.get('jsonp_callback','')
+        delta = timedelta(days=1)
+        data = Color.query.filter("timestmap>=:time").params(time=(datetime.now()-delta)).order_by(desc(Color.timestamp))
     except:
         return "error"
     return "%s(%s);"%(callback,data)
