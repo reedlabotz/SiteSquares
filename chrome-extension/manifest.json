@@ -1,6 +1,6 @@
 {
   "name": "SiteSquares",
-  "version": "0.1",
+  "version": "0.1.1",
   "manifest_version": 1,
   "description": "Colors of websites.",
   "background_page": "background.html",
@@ -11,8 +11,7 @@
     }
   ],
   "browser_action": {
-    "default_title": "SiteSquares"      // optional; shown in tooltip
-    //"default_popup": "popup.html"        // optional
+    "default_title": "SiteSquares"
 
   },
   "permissions": [
