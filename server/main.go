@@ -98,7 +98,7 @@ func PostHandler(w http.ResponseWriter, req *http.Request) {
 /** MAIN */
 func main() {
    r := pat.New()
-   r.Get("/api/post/{uuid}/{color}", PostHandler)
+   r.Post("/api/post/{uuid}/{color}", PostHandler)
    http.Handle("/", r)
    log.Printf("Server running on %s\n", PORT)
    http.ListenAndServe(PORT, Log(http.DefaultServeMux))
