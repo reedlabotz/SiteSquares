@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "SiteSquares",
+  "version": "0.2.0",
+  "description": "See the colors of your web.",
+  "browser_action": {
+    "default_title": "SiteSquares"
+  },
+  "permissions": [
+    "tabs",
+    "chrome://favicon/",
+    "history"
+  ]
+}
+
